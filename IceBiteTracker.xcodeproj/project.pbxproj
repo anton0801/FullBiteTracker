@@ -6,33 +6,114 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8F8A37132F3A320900A915FA /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8A37122F3A320900A915FA /* FirebaseDatabase */; };
+		8F8A37152F3A320900A915FA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8A37142F3A320900A915FA /* FirebaseMessaging */; };
+		8F8A37182F3A321300A915FA /* AppsFlyerLib in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8A37172F3A321300A915FA /* AppsFlyerLib */; };
+		8F8A37262F3A328400A915FA /* FullBiteTrackerExt.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8F8A371F2F3A328400A915FA /* FullBiteTrackerExt.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8F8A372E2F3A329100A915FA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8A372D2F3A329100A915FA /* FirebaseMessaging */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8F8A37242F3A328400A915FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8FCEEB092F2025A000B844D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8F8A371E2F3A328400A915FA;
+			remoteInfo = FullBiteTrackerExt;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8F8A372B2F3A328400A915FA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8F8A37262F3A328400A915FA /* FullBiteTrackerExt.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		8F8A371F2F3A328400A915FA /* FullBiteTrackerExt.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FullBiteTrackerExt.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FCEEB112F2025A000B844D1 /* IceBiteTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IceBiteTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8F8A371A2F3A321F00A915FA /* Exceptions for "IceBiteTracker" folder in "IceBiteTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8FCEEB102F2025A000B844D1 /* IceBiteTracker */;
+		};
+		8F8A372A2F3A328400A915FA /* Exceptions for "FullBiteTrackerExt" folder in "FullBiteTrackerExt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8F8A371E2F3A328400A915FA /* FullBiteTrackerExt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		8F8A37202F3A328400A915FA /* FullBiteTrackerExt */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8F8A372A2F3A328400A915FA /* Exceptions for "FullBiteTrackerExt" folder in "FullBiteTrackerExt" target */,
+			);
+			path = FullBiteTrackerExt;
+			sourceTree = "<group>";
+		};
 		8FCEEB132F2025A000B844D1 /* IceBiteTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8F8A371A2F3A321F00A915FA /* Exceptions for "IceBiteTracker" folder in "IceBiteTracker" target */,
+			);
 			path = IceBiteTracker;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8F8A371C2F3A328400A915FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F8A372E2F3A329100A915FA /* FirebaseMessaging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8FCEEB0E2F2025A000B844D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F8A37152F3A320900A915FA /* FirebaseMessaging in Frameworks */,
+				8F8A37132F3A320900A915FA /* FirebaseDatabase in Frameworks */,
+				8F8A37182F3A321300A915FA /* AppsFlyerLib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F8A372C2F3A329100A915FA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8FCEEB082F2025A000B844D1 = {
 			isa = PBXGroup;
 			children = (
 				8FCEEB132F2025A000B844D1 /* IceBiteTracker */,
+				8F8A37202F3A328400A915FA /* FullBiteTrackerExt */,
+				8F8A372C2F3A329100A915FA /* Frameworks */,
 				8FCEEB122F2025A000B844D1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				8FCEEB112F2025A000B844D1 /* IceBiteTracker.app */,
+				8F8A371F2F3A328400A915FA /* FullBiteTrackerExt.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +130,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		8F8A371E2F3A328400A915FA /* FullBiteTrackerExt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F8A37272F3A328400A915FA /* Build configuration list for PBXNativeTarget "FullBiteTrackerExt" */;
+			buildPhases = (
+				8F8A371B2F3A328400A915FA /* Sources */,
+				8F8A371C2F3A328400A915FA /* Frameworks */,
+				8F8A371D2F3A328400A915FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8F8A37202F3A328400A915FA /* FullBiteTrackerExt */,
+			);
+			name = FullBiteTrackerExt;
+			packageProductDependencies = (
+				8F8A372D2F3A329100A915FA /* FirebaseMessaging */,
+			);
+			productName = FullBiteTrackerExt;
+			productReference = 8F8A371F2F3A328400A915FA /* FullBiteTrackerExt.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		8FCEEB102F2025A000B844D1 /* IceBiteTracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8FCEEB1D2F2025A200B844D1 /* Build configuration list for PBXNativeTarget "IceBiteTracker" */;
@@ -55,16 +160,21 @@
 				8FCEEB0D2F2025A000B844D1 /* Sources */,
 				8FCEEB0E2F2025A000B844D1 /* Frameworks */,
 				8FCEEB0F2F2025A000B844D1 /* Resources */,
+				8F8A372B2F3A328400A915FA /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8F8A37252F3A328400A915FA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				8FCEEB132F2025A000B844D1 /* IceBiteTracker */,
 			);
 			name = IceBiteTracker;
 			packageProductDependencies = (
+				8F8A37122F3A320900A915FA /* FirebaseDatabase */,
+				8F8A37142F3A320900A915FA /* FirebaseMessaging */,
+				8F8A37172F3A321300A915FA /* AppsFlyerLib */,
 			);
 			productName = IceBiteTracker;
 			productReference = 8FCEEB112F2025A000B844D1 /* IceBiteTracker.app */;
@@ -80,6 +190,9 @@
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					8F8A371E2F3A328400A915FA = {
+						CreatedOnToolsVersion = 16.4;
+					};
 					8FCEEB102F2025A000B844D1 = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -94,17 +207,29 @@
 			);
 			mainGroup = 8FCEEB082F2025A000B844D1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8F8A37112F3A320900A915FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8F8A37162F3A321300A915FA /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8FCEEB122F2025A000B844D1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				8FCEEB102F2025A000B844D1 /* IceBiteTracker */,
+				8F8A371E2F3A328400A915FA /* FullBiteTrackerExt */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8F8A371D2F3A328400A915FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8FCEEB0F2F2025A000B844D1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +240,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8F8A371B2F3A328400A915FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8FCEEB0D2F2025A000B844D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +256,76 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		8F8A37252F3A328400A915FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8F8A371E2F3A328400A915FA /* FullBiteTrackerExt */;
+			targetProxy = 8F8A37242F3A328400A915FA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		8F8A37282F3A328400A915FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FullBiteTrackerExt/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FullBiteTrackerExt;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trackbite.BiteTracker.FullBiteTrackerExt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		8F8A37292F3A328400A915FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FullBiteTrackerExt/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FullBiteTrackerExt;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trackbite.BiteTracker.FullBiteTrackerExt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		8FCEEB1B2F2025A200B844D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -249,8 +450,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IceBiteTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Full Bite Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow to use this feature.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Full Bite Tracker may use limited technical information from your device to support tracking features, monitor app stability, and improve overall performance. This data is processed only for internal analysis and product improvement and is not used to track users across other apps or services, nor shared for third-party advertising.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -265,7 +469,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.000.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.trackbite.BiteTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -289,8 +493,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IceBiteTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Full Bite Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow to use this feature.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Full Bite Tracker may use limited technical information from your device to support tracking features, monitor app stability, and improve overall performance. This data is processed only for internal analysis and product improvement and is not used to track users across other apps or services, nor shared for third-party advertising.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -305,7 +512,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.000.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.trackbite.BiteTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -322,6 +529,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8F8A37272F3A328400A915FA /* Build configuration list for PBXNativeTarget "FullBiteTrackerExt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F8A37282F3A328400A915FA /* Debug */,
+				8F8A37292F3A328400A915FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		8FCEEB0C2F2025A000B844D1 /* Build configuration list for PBXProject "IceBiteTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -341,6 +557,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F8A37112F3A320900A915FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.9.0;
+			};
+		};
+		8F8A37162F3A321300A915FA /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppsFlyerSDK/AppsFlyerFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.17.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F8A37122F3A320900A915FA /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F8A37112F3A320900A915FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		8F8A37142F3A320900A915FA /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F8A37112F3A320900A915FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		8F8A37172F3A321300A915FA /* AppsFlyerLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F8A37162F3A321300A915FA /* XCRemoteSwiftPackageReference "AppsFlyerFramework" */;
+			productName = AppsFlyerLib;
+		};
+		8F8A372D2F3A329100A915FA /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F8A37112F3A320900A915FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8FCEEB092F2025A000B844D1 /* Project object */;
 }

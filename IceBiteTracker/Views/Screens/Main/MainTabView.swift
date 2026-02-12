@@ -17,17 +17,23 @@ struct MainTabView: View {
                 }
                 .tag(1)
             
+            GearView()
+                .tabItem {
+                    Label("Gear", systemImage: "figure.fishing")
+                }
+                .tag(2)
+            
             AnalysisView()
                 .tabItem {
                     Label("Analysis", systemImage: "chart.bar.fill")
                 }
-                .tag(2)
+                .tag(3)
             
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
-                .tag(3)
+                .tag(4)
         }
         .accentColor(AppColors.primaryAccent)
         .onAppear {

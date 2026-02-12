@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 class SessionViewModel: ObservableObject {
-    @Published var dataManager = DataManager.shared
+    @Published var dataManager = DataManager()
     @Published var selectedSession: Session?
     @Published var showingAddBite = false
     @Published var editingBite: Bite?
@@ -11,8 +11,8 @@ class SessionViewModel: ObservableObject {
         dataManager.currentSession?.bites.sorted { $0.timestamp < $1.timestamp } ?? []
     }
     
-    func addBite(strength: BiteStrength, result: BiteResult, notes: String, timestamp: Date = Date()) {
-        let bite = Bite(timestamp: timestamp, strength: strength, result: result, notes: notes)
+    func addBite(strength: BiteStrength, result: BiteResult, notes: String, timestamp: Date = Date(), gearId: UUID? = nil) {
+        let bite = Bite(timestamp: timestamp, strength: strength, result: result, notes: notes, gearId: gearId)
         dataManager.addBite(bite)
     }
     

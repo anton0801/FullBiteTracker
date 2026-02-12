@@ -11,37 +11,37 @@ struct SettingsView: View {
                 
                 List {
                     // General Settings
-                    Section(header: Text("General").foregroundColor(AppColors.textSecondary)) {
-                        Picker("Time Format", selection: Binding(
-                            get: { viewModel.settings.timeFormat },
-                            set: { viewModel.updateTimeFormat($0) }
-                        )) {
-                            Text("12h").tag(AppSettings.TimeFormat.twelveHour)
-                            Text("24h").tag(AppSettings.TimeFormat.twentyFourHour)
-                        }
-                        .foregroundColor(AppColors.textPrimary)
-                        
-                        Stepper(
-                            "Bite Strength Scale: \(viewModel.settings.biteStrengthScale)",
-                            value: Binding(
-                                get: { viewModel.settings.biteStrengthScale },
-                                set: { viewModel.updateStrengthScale($0) }
-                            ),
-                            in: 3...5
-                        )
-                        .foregroundColor(AppColors.textPrimary)
-                        
-                        Stepper(
-                            "Default Session: \(viewModel.settings.defaultSessionLength)h",
-                            value: Binding(
-                                get: { viewModel.settings.defaultSessionLength },
-                                set: { viewModel.updateDefaultSessionLength($0) }
-                            ),
-                            in: 2...12
-                        )
-                        .foregroundColor(AppColors.textPrimary)
-                    }
-                    .listRowBackground(AppColors.cardBackground)
+//                    Section(header: Text("General").foregroundColor(AppColors.textSecondary)) {
+//                        Picker("Time Format", selection: Binding(
+//                            get: { viewModel.settings.timeFormat },
+//                            set: { viewModel.updateTimeFormat($0) }
+//                        )) {
+//                            Text("12h").tag(AppSettings.TimeFormat.twelveHour)
+//                            Text("24h").tag(AppSettings.TimeFormat.twentyFourHour)
+//                        }
+//                        .foregroundColor(AppColors.textPrimary)
+//                        
+//                        Stepper(
+//                            "Bite Strength Scale: \(viewModel.settings.biteStrengthScale)",
+//                            value: Binding(
+//                                get: { viewModel.settings.biteStrengthScale },
+//                                set: { viewModel.updateStrengthScale($0) }
+//                            ),
+//                            in: 3...5
+//                        )
+//                        .foregroundColor(AppColors.textPrimary)
+//                        
+//                        Stepper(
+//                            "Default Session: \(viewModel.settings.defaultSessionLength)h",
+//                            value: Binding(
+//                                get: { viewModel.settings.defaultSessionLength },
+//                                set: { viewModel.updateDefaultSessionLength($0) }
+//                            ),
+//                            in: 2...12
+//                        )
+//                        .foregroundColor(AppColors.textPrimary)
+//                    }
+//                    .listRowBackground(AppColors.cardBackground)
                     
                     // Export
                     Section(header: Text("Data").foregroundColor(AppColors.textSecondary)) {

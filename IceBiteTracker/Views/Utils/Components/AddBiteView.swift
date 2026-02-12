@@ -7,8 +7,10 @@ struct AddBiteView: View {
     @State private var selectedTime = Date()
     @State private var selectedStrength: BiteStrength = .medium
     @State private var selectedResult: BiteResult = .miss
+    @State private var selectedGear: FishingGear? // NEW
     @State private var notes = ""
     @State private var showingSaved = false
+    @State private var showingGearPicker = false // NEW
     
     var editingBite: Bite?
     
@@ -21,6 +23,11 @@ struct AddBiteView: View {
             _selectedStrength = State(initialValue: bite.strength)
             _selectedResult = State(initialValue: bite.result)
             _notes = State(initialValue: bite.notes)
+            
+            // NEW - загружаем привязанную снасть
+            if let gearId = bite.gearId {
+                _selectedGear = State(initialValue: DataManager.shared.getGear(by: gearId))
+            }
         }
     }
     
@@ -41,6 +48,52 @@ struct AddBiteView: View {
                                 .datePickerStyle(WheelDatePickerStyle())
                                 .labelsHidden()
                                 .colorScheme(.dark)
+                        }
+                        .padding()
+                        .cardStyle()
+                        
+                        // NEW - Gear Selection
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Fishing Gear (Optional)")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(AppColors.textSecondary)
+                            
+                            Button(action: { showingGearPicker = true }) {
+                                HStack {
+                                    if let gear = selectedGear {
+                                        Image(systemName: gear.category.icon)
+                                            .font(.system(size: 20))
+                                            .foregroundColor(Color(hex: gear.color))
+                                        
+                                        Text(gear.name)
+                                            .font(.system(size: 16, weight: .medium))
+                                            .foregroundColor(AppColors.textPrimary)
+                                        
+                                        Spacer()
+                                        
+                                        Button(action: { selectedGear = nil }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(AppColors.textSecondary)
+                                        }
+                                    } else {
+                                        Image(systemName: "plus.circle.fill")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(AppColors.primaryAccent)
+                                        
+                                        Text("Select Gear")
+                                            .font(.system(size: 16, weight: .medium))
+                                            .foregroundColor(AppColors.primaryAccent)
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(AppColors.textSecondary)
+                                    }
+                                }
+                                .padding()
+                                .background(AppColors.background)
+                                .cornerRadius(12)
+                            }
                         }
                         .padding()
                         .cardStyle()
@@ -130,6 +183,9 @@ struct AddBiteView: View {
                     .foregroundColor(AppColors.textSecondary)
                 }
             }
+            .sheet(isPresented: $showingGearPicker) {
+                GearPickerView(selectedGear: $selectedGear)
+            }
         }
     }
     
@@ -140,7 +196,8 @@ struct AddBiteView: View {
                 timestamp: selectedTime,
                 strength: selectedStrength,
                 result: selectedResult,
-                notes: notes
+                notes: notes,
+                gearId: selectedGear?.id // NEW
             )
             viewModel.updateBite(updated)
         } else {
@@ -148,7 +205,8 @@ struct AddBiteView: View {
                 strength: selectedStrength,
                 result: selectedResult,
                 notes: notes,
-                timestamp: selectedTime
+                timestamp: selectedTime,
+                gearId: selectedGear?.id
             )
         }
         
@@ -159,6 +217,191 @@ struct AddBiteView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             presentationMode.wrappedValue.dismiss()
         }
+    }
+}
+
+struct BiteAlertView: View {
+    @ObservedObject var program: Program
+    
+    var body: some View {
+        GeometryReader { g in
+            ZStack {
+                Color.black.ignoresSafeArea()
+                
+                Image("bg_notification_screen")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: g.size.width, height: g.size.height)
+                    .ignoresSafeArea()
+                    .opacity(0.9)
+                
+                if g.size.width < g.size.height {
+                    VStack(spacing: 12) {
+                        Spacer()
+                        
+                        Text("ALLOW NOTIFICATIONS ABOUT\nBONUSES AND PROMOS")
+                            .font(.system(size: 24, weight: .black))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                        
+                        Text("STAY TUNED WITH BEST OFFERS FROM\nOUR CASINO")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white.opacity(0.7))
+                            .multilineTextAlignment(.center)
+                        
+                        actionButtons
+                    }
+                    .padding(.bottom, 24)
+                    .padding(.horizontal, 12)
+                } else {
+                    HStack {
+                        Spacer()
+                        VStack(alignment: .leading, spacing: 12) {
+                            Spacer()
+                            
+                            Text("ALLOW NOTIFICATIONS ABOUT\nBONUSES AND PROMOS")
+                                .font(.system(size: 24, weight: .black))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .multilineTextAlignment(.leading)
+                            
+                            Text("STAY TUNED WITH BEST OFFERS FROM\nOUR CASINO")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.white.opacity(0.7))
+                                .padding(.horizontal, 12)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
+                        VStack {
+                            Spacer()
+                            actionButtons
+                        }
+                        Spacer()
+                    }
+                    .padding(.bottom, 24)
+                }
+            }
+        }
+        .ignoresSafeArea()
+        .preferredColorScheme(.dark)
+    }
+    
+    private var actionButtons: some View {
+        VStack(spacing: 16) {
+            Button {
+                program.send(.alertPermissionRequested)
+            } label: {
+                Image("notification_screen_btn")
+                    .resizable()
+                    .frame(width: 300, height: 55)
+            }
+            
+            Button {
+                program.send(.alertPromptDismissed)
+            } label: {
+                Text("Skip")
+                    .font(.headline)
+                    .foregroundColor(.white.opacity(0.4))
+                    .frame(width: 260, height: 40)
+                    .background(
+                        Color.white.opacity(0.2)
+                    )
+                    .cornerRadius(52)
+            }
+        }
+        .padding(.horizontal, 24)
+    }
+}
+
+
+// NEW - Gear Picker Sheet
+struct GearPickerView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var selectedGear: FishingGear?
+    @StateObject private var viewModel = GearViewModel()
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                AppColors.background.ignoresSafeArea()
+                
+                if viewModel.dataManager.fishingGear.isEmpty {
+                    VStack(spacing: 24) {
+                        Image(systemName: "fork.knife.circle")
+                            .font(.system(size: 60))
+                            .foregroundColor(AppColors.textSecondary.opacity(0.5))
+                        
+                        VStack(spacing: 8) {
+                            Text("No Gear Yet")
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundColor(AppColors.textPrimary)
+                            
+                            Text("Add gear in the Gear tab first")
+                                .font(.system(size: 16))
+                                .foregroundColor(AppColors.textSecondary)
+                        }
+                    }
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(viewModel.dataManager.fishingGear) { gear in
+                                GearPickerRow(gear: gear, isSelected: selectedGear?.id == gear.id)
+                                    .onTapGesture {
+                                        selectedGear = gear
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+            }
+            .navigationTitle("Select Gear")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .foregroundColor(AppColors.textSecondary)
+                }
+            }
+        }
+    }
+}
+
+struct GearPickerRow: View {
+    let gear: FishingGear
+    let isSelected: Bool
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: gear.category.icon)
+                .font(.system(size: 24))
+                .foregroundColor(Color(hex: gear.color))
+                .frame(width: 40)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(gear.name)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(AppColors.textPrimary)
+                
+                Text(gear.category.rawValue)
+                    .font(.system(size: 14))
+                    .foregroundColor(AppColors.textSecondary)
+            }
+            
+            Spacer()
+            
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(AppColors.primaryAccent)
+                    .font(.system(size: 24))
+            }
+        }
+        .padding()
+        .background(isSelected ? AppColors.primaryAccent.opacity(0.1) : AppColors.cardBackground)
+        .cornerRadius(12)
     }
 }
 

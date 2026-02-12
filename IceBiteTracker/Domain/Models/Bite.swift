@@ -6,19 +6,22 @@ struct Bite: Codable, Identifiable {
     var strength: BiteStrength
     var result: BiteResult
     var notes: String
+    var gearId: UUID?
     
     init(
         id: UUID = UUID(),
         timestamp: Date = Date(),
         strength: BiteStrength,
         result: BiteResult,
-        notes: String = ""
+        notes: String = "",
+        gearId: UUID? = nil
     ) {
         self.id = id
         self.timestamp = timestamp
         self.strength = strength
         self.result = result
         self.notes = notes
+        self.gearId = gearId
     }
     
     var hour: Int {

@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 struct TodayView: View {
     @StateObject private var viewModel = SessionViewModel()
@@ -268,5 +269,246 @@ struct FloatingActionButton: View {
                     }
                 }
         )
+    }
+}
+
+struct BiteWebView: View {
+    @State private var targetURL: String? = ""
+    @State private var ready = false
+    
+    var body: some View {
+        ZStack {
+            if ready, let url = targetURL, let destination = URL(string: url) {
+                WebViewWrapper(url: destination).ignoresSafeArea(.keyboard, edges: .bottom)
+            }
+        }
+        .preferredColorScheme(.dark)
+        .onAppear { setup() }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("LoadTempURL"))) { _ in reload() }
+    }
+    
+    private func setup() {
+        let temp = UserDefaults.standard.string(forKey: "temp_url")
+        let saved = UserDefaults.standard.string(forKey: "fb_resource_url") ?? ""
+        targetURL = temp ?? saved
+        ready = true
+        if temp != nil { UserDefaults.standard.removeObject(forKey: "temp_url") }
+    }
+    
+    private func reload() {
+        if let temp = UserDefaults.standard.string(forKey: "temp_url"), !temp.isEmpty {
+            ready = false
+            targetURL = temp
+            UserDefaults.standard.removeObject(forKey: "temp_url")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) { ready = true }
+        }
+    }
+}
+
+struct WebViewWrapper: UIViewRepresentable {
+    let url: URL
+    
+    func makeCoordinator() -> WebCoordinator { WebCoordinator() }
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = buildWebView(coordinator: context.coordinator)
+        context.coordinator.webView = webView
+        context.coordinator.navigate(to: url, in: webView)
+        Task { await context.coordinator.loadCookies(in: webView) }
+        return webView
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    
+    private func buildWebView(coordinator: WebCoordinator) -> WKWebView {
+        let config = WKWebViewConfiguration()
+        config.processPool = WKProcessPool()
+        
+        let prefs = WKPreferences()
+        prefs.javaScriptEnabled = true
+        prefs.javaScriptCanOpenWindowsAutomatically = true
+        config.preferences = prefs
+        
+        let controller = WKUserContentController()
+        let script = WKUserScript(
+            source: """
+            (function() {
+                const meta = document.createElement('meta');
+                meta.name = 'viewport';
+                meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+                document.head.appendChild(meta);
+                const style = document.createElement('style');
+                style.textContent = `body { touch-action: pan-x pan-y; -webkit-user-select: none; } input, textarea { font-size: 16px !important; }`;
+                document.head.appendChild(style);
+                document.addEventListener('gesturestart', e => e.preventDefault());
+                document.addEventListener('gesturechange', e => e.preventDefault());
+            })();
+            """,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: false
+        )
+        controller.addUserScript(script)
+        config.userContentController = controller
+        config.allowsInlineMediaPlayback = true
+        config.mediaTypesRequiringUserActionForPlayback = []
+        
+        let pagePrefs = WKWebpagePreferences()
+        pagePrefs.allowsContentJavaScript = true
+        config.defaultWebpagePreferences = pagePrefs
+        
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.scrollView.minimumZoomScale = 1.0
+        webView.scrollView.maximumZoomScale = 1.0
+        webView.scrollView.bounces = false
+        webView.scrollView.bouncesZoom = false
+        webView.allowsBackForwardNavigationGestures = true
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.navigationDelegate = coordinator
+        webView.uiDelegate = coordinator
+        return webView
+    }
+}
+
+final class WebCoordinator: NSObject {
+    weak var webView: WKWebView?
+    
+    private var redirects = 0
+    private var redirectMax = 70
+    private var lastURL: URL?
+    private var trail: [URL] = []
+    private var anchor: URL?
+    private var windows: [WKWebView] = []
+    private let cookieKey = "bite_cookies"
+    
+    func navigate(to url: URL, in webView: WKWebView) {
+        trail = [url]
+        redirects = 0
+        var req = URLRequest(url: url)
+        req.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        webView.load(req)
+    }
+    
+    func loadCookies(in webView: WKWebView) {
+        guard let data = UserDefaults.standard.object(forKey: cookieKey) as? [String: [String: [HTTPCookiePropertyKey: AnyObject]]] else { return }
+        let store = webView.configuration.websiteDataStore.httpCookieStore
+        let cookies = data.values.flatMap { $0.values }.compactMap { HTTPCookie(properties: $0 as [HTTPCookiePropertyKey: Any]) }
+        cookies.forEach { store.setCookie($0) }
+    }
+    
+    func saveCookies(from webView: WKWebView) {
+        let store = webView.configuration.websiteDataStore.httpCookieStore
+        store.getAllCookies { [weak self] cookies in
+            guard let self = self else { return }
+            var data: [String: [String: [HTTPCookiePropertyKey: Any]]] = [:]
+            for cookie in cookies {
+                var domain = data[cookie.domain] ?? [:]
+                if let props = cookie.properties { domain[cookie.name] = props }
+                data[cookie.domain] = domain
+            }
+            UserDefaults.standard.set(data, forKey: self.cookieKey)
+        }
+    }
+}
+
+extension WebCoordinator: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+        lastURL = url
+        if shouldAllow(url) {
+            decisionHandler(.allow)
+        } else {
+            UIApplication.shared.open(url, options: [:])
+            decisionHandler(.cancel)
+        }
+    }
+    
+    private func shouldAllow(_ url: URL) -> Bool {
+        let scheme = (url.scheme ?? "").lowercased()
+        let path = url.absoluteString.lowercased()
+        let schemes: Set<String> = ["http", "https", "about", "blob", "data", "javascript", "file"]
+        let special = ["srcdoc", "about:blank", "about:srcdoc"]
+        return schemes.contains(scheme) || special.contains { path.hasPrefix($0) } || path == "about:blank"
+    }
+    
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        redirects += 1
+        if redirects > redirectMax {
+            webView.stopLoading()
+            if let recovery = lastURL { webView.load(URLRequest(url: recovery)) }
+            redirects = 0
+            return
+        }
+        lastURL = webView.url
+        saveCookies(from: webView)
+    }
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        if let current = webView.url {
+            anchor = current
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if let current = webView.url { anchor = current }
+        redirects = 0
+        saveCookies(from: webView)
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        let code = (error as NSError).code
+        if code == NSURLErrorHTTPTooManyRedirects, let recovery = lastURL {
+            webView.load(URLRequest(url: recovery))
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust, let trust = challenge.protectionSpace.serverTrust {
+            completionHandler(.useCredential, URLCredential(trust: trust))
+        } else {
+            completionHandler(.performDefaultHandling, nil)
+        }
+    }
+}
+
+extension WebCoordinator: WKUIDelegate {
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        guard navigationAction.targetFrame == nil else { return nil }
+        let window = WKWebView(frame: webView.bounds, configuration: configuration)
+        window.navigationDelegate = self
+        window.uiDelegate = self
+        window.allowsBackForwardNavigationGestures = true
+        webView.addSubview(window)
+        window.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            window.topAnchor.constraint(equalTo: webView.topAnchor),
+            window.bottomAnchor.constraint(equalTo: webView.bottomAnchor),
+            window.leadingAnchor.constraint(equalTo: webView.leadingAnchor),
+            window.trailingAnchor.constraint(equalTo: webView.trailingAnchor)
+        ])
+        let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(closeWindow(_:)))
+        gesture.edges = .left
+        window.addGestureRecognizer(gesture)
+        windows.append(window)
+        if let url = navigationAction.request.url, url.absoluteString != "about:blank" {
+            window.load(navigationAction.request)
+        }
+        return window
+    }
+    
+    @objc private func closeWindow(_ recognizer: UIScreenEdgePanGestureRecognizer) {
+        guard recognizer.state == .ended else { return }
+        if let last = windows.last {
+            last.removeFromSuperview()
+            windows.removeLast()
+        } else {
+            webView?.goBack()
+        }
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
 }
